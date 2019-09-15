@@ -82,7 +82,8 @@ class Nkdayraces():
 
         racesgp = cp.deepcopy(data['racesdf'])
         racesgp['R2'] = racesgp.R
-        racesgp = racesgp.query('順位 < 4').groupby(['場所','R','レースID','クラス','形式','距離','天候','状態','情報','時刻','日程','グレード','頭数','賞金'])
+        racesgp[['賞金', '通過']] = racesgp[['賞金', '通過']].applymap(str)
+        racesgp = racesgp.query('順位 < 4').groupby(['場所','R','レースID','クラス','形式','距離','天候','状態','情報','日時','日程','時刻','グレード','頭数','賞金'])
         racesgp2 = racesgp.agg(list)
         racesgp2.R2 = racesgp2.R2.apply(set)
         racesgp2 = racesgp2.applymap(lambda x: '(' + ', '.join(map(str, x)) + ')')
