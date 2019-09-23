@@ -43,7 +43,7 @@ div.dispplacerace > div > h5{
 th, td{
   white-space: nowrap;
 }
-.col_レースID, .col_タイトル, .col_天候, .col_時刻, .col_発走時刻, .col_日程, .col_グレード, .col_頭数, .col_賞金, .col_raceurl{
+.col_レースID, .col_タイトル, .col_天候, .col_日時, .col_日程, .col_グレード, .col_頭数, .col_賞金, .col_raceurl{
   display: none;
 }
 .rankinfo_initnone,

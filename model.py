@@ -1,6 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
-import re
 import copy as cp
 from settings import env
 
@@ -29,7 +28,7 @@ class Nkdayraces():
         con = engine.connect()
         sql = table.select().order_by(cols.place, cols.racenum, cols.placenum)
         racesdf = pd.read_sql(sql, con)
-
+        # racesdf.date = racesdf.date.apply(lambda x: x.tz_convert('Asia/Tokyo'))
         racesdf.title = racesdf.title.apply(lambda x: x.rstrip('クラス'))
         racesdf.posttime = racesdf.posttime.apply(lambda x: x.strftime('%H:%M'))
         racesdf.time = racesdf.time.apply(lambda x: x.strftime('%M:%S %f')[1:].rstrip('0') if x is not None else None)
