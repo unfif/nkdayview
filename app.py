@@ -57,4 +57,4 @@ def getraces():
 #     app.run(debug=False, host='0.0.0.0')
 
 if __name__ == '__main__':
-    uvicorn.run(app, host=args.host, port=args.port, log_level=args.log_level, interface='wsgi')
+    uvicorn.run(app, host=args.host, port=args.port, log_level=args.log_level, interface='wsgi', lifespan='off')
