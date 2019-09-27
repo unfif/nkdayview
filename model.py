@@ -16,30 +16,24 @@ def init_db(app):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
 
-# class ToDoItem(db.Model):
-#     __tablename__ = "todoitems"
-#     item_id = db.Column(db.Integer, primary_key=True)
-#     title = db.Column(db.String(100), nullable=False, default=False)
-#     done = db.Column(db.Boolean, nullable=False)
-
 class Nkdayraces():
     def getRaces():
         data = {}
         con = engine.connect()
         sql = table.select().order_by(cols.place, cols.racenum, cols.placenum)
         racesdf = pd.read_sql(sql, con)
-        # racesdf.date = racesdf.date.apply(lambda x: x.tz_convert('Asia/Tokyo'))
+        
         racesdf.title = racesdf.title.apply(lambda x: x.rstrip('クラス'))
         racesdf.posttime = racesdf.posttime.apply(lambda x: x.strftime('%H:%M'))
         racesdf.time = racesdf.time.apply(lambda x: x.strftime('%M:%S %f')[1:].rstrip('0') if x is not None else None)
 
-        # racesdf = pd.read_json('C:/Users/pathz/Documents/scrapy/nkdayscraper/results01.json', encoding='utf-8')
         racesdf = racesdf.sort_values(['place', 'racenum', 'placenum']).reset_index(drop=True)
         racesdf['racerank'] = racesdf[['place', 'racenum', 'placenum']].groupby(['place', 'racenum']).rank()
+
         racesdf['nextracerank'] = racesdf.loc[1:, 'racerank'].reset_index(drop=True)
-        racesdf.loc[racesdf['racerank'] < 4.0, 'rankinfo'] = 'initdisp'
-        racesdf.loc[(racesdf['racerank'] < 4.0) & (racesdf['nextracerank'] >= 4.0), 'rankinfo'] = 'initend'
-        racesdf.loc[racesdf['racerank'] >= 4.0, 'rankinfo'] = 'initnone'
+        racesdf.loc[racesdf['racerank'] < 4, 'rankinfo'] = 'initdisp'
+        racesdf.loc[(racesdf['racerank'] < 4) & (racesdf['nextracerank'] >= 4), 'rankinfo'] = 'initend'
+        racesdf.loc[racesdf['racerank'] >= 4, 'rankinfo'] = 'initnone'
         racesdf.loc[racesdf['nextracerank'] - racesdf['racerank'] < 0, 'rankinfo'] = 'raceend'
 
         sql = "SELECT psat.relname as TABLE_NAME, pa.attname as COLUMN_NAME, pd.description as COLUMN_COMMENT "
@@ -54,8 +48,11 @@ class Nkdayraces():
         con.close()
 
         jockeyct = pd.crosstab([racesdf.place, racesdf.jockey], racesdf.placenum, margins=True)
-        rates = [round(100 * jockeyct[rank] / jockeyct.All, 1) for rank in range(1, 4)]
-        jockeyct['単勝率'], jockeyct['連対率'], jockeyct['複勝率'] = rates
+        jockeyct.columns = [int(x) if type(x) is float else x for x in jockeyct.columns]
+
+        ranges = [list(range(1, x+1)) for x in range(1, 4)]
+        jockeyct['単勝率'], jockeyct['連対率'], jockeyct['複勝率'] = [round(100 * jockeyct[range].sum(axis=1) / jockeyct.All, 1) for range in ranges]
+
         jockeyct = jockeyct[[1,2,3, '単勝率', '連対率', '複勝率', 'All']].sort_values(['place',1,2,3], ascending=False)
         lastplace = ''
         lastindex = ''
@@ -93,30 +90,3 @@ class Nkdayraces():
         data['racesgp2'] = racesgp2[['R2','枠番','馬番','人気','騎手','場所形式']].rename(columns={'R2':'R'})
 
         return data
-
-# class ToDoList:
-#   def add(self, title):
-#     item = ToDoItem(title=title, done=False)
-#     db.session.add(item)
-#     db.session.commit()
-#
-#   def delete(self, item_id):
-#     item = ToDoItem.query.filter_by(item_id=item_id).first()
-#     db.session.delete(item)
-#     db.session.commit()
-#
-#   def get_all(self):
-#     items = ToDoItem.query.all()
-#     return items
-#
-#   def delete_doneitem(self):
-#     ToDoItem.query.filter_by(done=True).delete()
-#     db.session.commit()
-#
-#   def update_done(self, items):
-#     for item in self.get_all():
-#       if item.item_id in items:
-#         item.done = True
-#       else:
-#         item.done = False
-#     db.session.commit()
