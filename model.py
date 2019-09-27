@@ -22,19 +22,19 @@ class Nkdayraces():
         con = engine.connect()
         sql = table.select().order_by(cols.place, cols.racenum, cols.placenum)
         racesdf = pd.read_sql(sql, con)
-        
+
         racesdf.title = racesdf.title.apply(lambda x: x.rstrip('クラス'))
         racesdf.posttime = racesdf.posttime.apply(lambda x: x.strftime('%H:%M'))
         racesdf.time = racesdf.time.apply(lambda x: x.strftime('%M:%S %f')[1:].rstrip('0') if x is not None else None)
 
         racesdf = racesdf.sort_values(['place', 'racenum', 'placenum']).reset_index(drop=True)
-        racesdf['racerank'] = racesdf[['place', 'racenum', 'placenum']].groupby(['place', 'racenum']).rank()
+        racesdf['placenum'] = racesdf[['place', 'racenum', 'placenum']].groupby(['place', 'racenum']).rank(na_option='bottom').astype(int)
 
-        racesdf['nextracerank'] = racesdf.loc[1:, 'racerank'].reset_index(drop=True)
-        racesdf.loc[racesdf['racerank'] < 4, 'rankinfo'] = 'initdisp'
-        racesdf.loc[(racesdf['racerank'] < 4) & (racesdf['nextracerank'] >= 4), 'rankinfo'] = 'initend'
-        racesdf.loc[racesdf['racerank'] >= 4, 'rankinfo'] = 'initnone'
-        racesdf.loc[racesdf['nextracerank'] - racesdf['racerank'] < 0, 'rankinfo'] = 'raceend'
+        racesdf['nextracerank'] = racesdf.loc[1:, 'placenum'].reset_index(drop=True)
+        racesdf.loc[racesdf['placenum'] < 4, 'rankinfo'] = 'initdisp'
+        racesdf.loc[(racesdf['placenum'] < 4) & (racesdf['nextracerank'] >= 4), 'rankinfo'] = 'initend'
+        racesdf.loc[racesdf['placenum'] >= 4, 'rankinfo'] = 'initnone'
+        racesdf.loc[racesdf['nextracerank'] - racesdf['placenum'] < 0, 'rankinfo'] = 'raceend'
 
         sql = "SELECT psat.relname as TABLE_NAME, pa.attname as COLUMN_NAME, pd.description as COLUMN_COMMENT "
         sql += "FROM pg_stat_all_tables psat, pg_description pd, pg_attribute pa "
