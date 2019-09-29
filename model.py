@@ -54,6 +54,7 @@ class Nkdayraces():
         jockeyct['単勝率'], jockeyct['連対率'], jockeyct['複勝率'] = [round(100 * jockeyct[range].sum(axis=1) / jockeyct.All, 1) for range in ranges]
 
         jockeyct = jockeyct[[1,2,3, '単勝率', '連対率', '複勝率', 'All']].sort_values(['place',1,2,3], ascending=False)
+        jockeyct = jockeyct.sort_index()
         lastplace = ''
         lastindex = ''
         for index in jockeyct.index:
