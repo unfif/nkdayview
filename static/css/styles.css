@@ -22,6 +22,7 @@ h2, h3{
 }
 .flex{
   display: flex;
+  justify-content: center;
 }
 div.dispplacerace{
   display: flex;
@@ -62,6 +63,7 @@ th, td{
   border-bottom: 3px solid #999;
 }
 div.jockeysrank > table{
+  width: unset;
   margin: 0 4px 1rem;
 }
 table.raceresults tbody tr:not(.場所_{{racesdf.場所.unique()[0]}}){
