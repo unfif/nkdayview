@@ -27,6 +27,7 @@ class Nkdayraces():
         racesdf.posttime = racesdf.posttime.apply(lambda x: x.strftime('%H:%M'))
         racesdf.time = racesdf.time.apply(lambda x: x.strftime('%M:%S %f')[1:].rstrip('0') if x is not None else None)
         racesdf.fav = racesdf.fav.fillna(99).astype(int)
+        racesdf.horseweight = racesdf.horseweight.fillna(0).astype(int)
         racesdf.horseweightdiff = racesdf.horseweightdiff.fillna(0).astype(int)
 
         racesdf = racesdf.sort_values(['place', 'racenum', 'placenum']).reset_index(drop=True)
