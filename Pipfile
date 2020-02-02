@@ -13,7 +13,7 @@ flask-sqlalchemy = "*"
 psycopg2 = "*"
 python-dotenv = "*"
 uvicorn = "*"
-werkzeug = "==0.15.4"
+werkzeug = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"
