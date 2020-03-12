@@ -42,7 +42,7 @@
       </thead>
       <tbody>
         {%- for index, row in racesdf.iterrows(): %}
-        <tr class="場所_{{row.場所}} R_{{row.R}} 順位_{{row.順位}} idx_{{index}} rankinfo_{{row.rankinfo}}" data-place="{{row.場所}}" data-racenum="{{row.R}}" data-placenum="{{row.順位}}">
+        <tr class="場所_{{row.場所}} R_{{row.R}} 順位_{{row.順位}} idx_{{index}} rankinfo_{{row.rankinfo}}" data-place="{{row.場所}}" data-racenum="{{row.R}}" data-rank="{{row.順位}}">
           {%- for col, val in row.items(): %}
           <td class="col_{{col}} 場所_{{row.場所}} R_{{row.R}} 順位_{{row.順位}} idx_{{index}}">{{val}}</td>
           {%- endfor %}
@@ -75,46 +75,46 @@
         </tbody>
       </table>
     </div>
-  </div>
-  <div class="jockeysrank flex">
-    {%- set jockeystr = "activetr" %}
-    {%- for index, row in jockeys.iterrows(): %}
-    {%- if row.dispmode == 'place1st': %}
-    <table class="racejockeys table table-sm table-striped table-hover">
-      <thead class="thead-dark">
-        <tr>
-          <th>場所</th>
-          <th>騎手</th>
-          {%- for th in jockeys.columns[:-1]: %}
-          <th>{{th}}</th>
-          {%- endfor %}
-        </tr>
-      </thead>
-      <tbody>
-    {%- endif %}
-        {%- if row[1] == 0.0 and row[2] == 0.0 and row[3] == 0.0: %}
-          {%- set jockeystr = "hiddentr" %}
-        {%- endif %}
-        <tr class="{{jockeystr}}" data-place="{{index[0]}}">
-          <th>{{index[0]}}</th>
-          <th>{{index[1]}}</th>
-          {%- for col, val in row.items(): %}
-            {%- if col != 'dispmode': %}
-              {%- if col in ('1着','2着','3着','騎乗数') or (val+1) / (val|int + 1) == 1: %}
-                {%- set val = val|int %}
+    <div class="jockeysrank no-flex">
+      {%- set jockeystr = "activetr" %}
+      {%- for index, row in jockeys.iterrows(): %}
+      {%- if row.dispmode == 'place1st': %}
+      <table class="racejockeys table table-sm table-striped table-hover">
+        <thead class="thead-dark">
+          <tr>
+            <th>場所</th>
+            <th>騎手</th>
+            {%- for th in jockeys.columns[:-1]: %}
+            <th>{{th}}</th>
+            {%- endfor %}
+          </tr>
+        </thead>
+        <tbody>
+      {%- endif %}
+          {%- if row[1] == 0.0 and row[2] == 0.0 and row[3] == 0.0: %}
+            {%- set jockeystr = "hiddentr" %}
+          {%- endif %}
+          <tr class="{{jockeystr}}" data-place="{{index[0]}}">
+            <th>{{index[0]}}</th>
+            <th>{{index[1]}}</th>
+            {%- for col, val in row.items(): %}
+              {%- if col != 'dispmode': %}
+                {%- if col in ('1着','2着','3着','騎乗数') or (val+1) / (val|int + 1) == 1: %}
+                  {%- set val = val|int %}
+                {%- endif %}
+                {%- if val == 0.0 or val == 0: %}
+                  {%- set val = "..." %}
+                {%- endif %}
+            <td>{{val}}</td>
               {%- endif %}
-              {%- if val == 0.0 or val == 0: %}
-                {%- set val = "..." %}
-              {%- endif %}
-          <td>{{val}}</td>
-            {%- endif %}
-          {%- endfor %}
-        </tr>
-    {%- if row.dispmode == 'placelast': %}
-      </tbody>
-    </table>
-    {%- endif %}
-    {%- endfor %}
+            {%- endfor %}
+          </tr>
+      {%- if row.dispmode == 'placelast': %}
+        </tbody>
+      </table>
+      {%- endif %}
+      {%- endfor %}
+    </div>
   </div>
   <script src="{{url_for('static', filename='js/script.js')}}"></script>
 </body>

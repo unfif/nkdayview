@@ -20,7 +20,7 @@ class Nkdayraces():
     def getRaces():
         data = {}
         con = engine.connect()
-        sql = table.select().order_by(cols.place, cols.racenum, cols.placenum)
+        sql = table.select().order_by(cols.place, cols.racenum, cols.ranking)
         racesdf = pd.read_sql(sql, con)
 
         racesdf.title = racesdf.title.apply(lambda x: x.rstrip('クラス'))
@@ -30,14 +30,14 @@ class Nkdayraces():
         racesdf.horseweight = racesdf.horseweight.fillna(0).astype(int)
         racesdf.horseweightdiff = racesdf.horseweightdiff.fillna(0).astype(int)
 
-        racesdf = racesdf.sort_values(['place', 'racenum', 'placenum']).reset_index(drop=True)
-        racesdf['placenum'] = racesdf[['place', 'racenum', 'placenum']].groupby(['place', 'racenum']).rank(na_option='bottom').astype(int)
+        racesdf = racesdf.sort_values(['place', 'racenum', 'ranking']).reset_index(drop=True)
+        racesdf['ranking'] = racesdf[['place', 'racenum', 'ranking']].groupby(['place', 'racenum']).rank(na_option='bottom').astype(int)
 
-        racesdf['nextracerank'] = racesdf.loc[1:, 'placenum'].reset_index(drop=True)
-        racesdf.loc[racesdf['placenum'] < 4, 'rankinfo'] = 'initdisp'
-        racesdf.loc[(racesdf['placenum'] < 4) & (racesdf['nextracerank'] >= 4), 'rankinfo'] = 'initend'
-        racesdf.loc[racesdf['placenum'] >= 4, 'rankinfo'] = 'initnone'
-        racesdf.loc[racesdf['nextracerank'] - racesdf['placenum'] < 0, 'rankinfo'] = 'raceend'
+        racesdf['nextracerank'] = racesdf.loc[1:, 'ranking'].reset_index(drop=True)
+        racesdf.loc[racesdf['ranking'] < 4, 'rankinfo'] = 'initdisp'
+        racesdf.loc[(racesdf['ranking'] < 4) & (racesdf['nextracerank'] >= 4), 'rankinfo'] = 'initend'
+        racesdf.loc[racesdf['ranking'] >= 4, 'rankinfo'] = 'initnone'
+        racesdf.loc[racesdf['nextracerank'] - racesdf['ranking'] < 0, 'rankinfo'] = 'raceend'
 
         sql = "SELECT psat.relname as TABLE_NAME, pa.attname as COLUMN_NAME, pd.description as COLUMN_COMMENT "
         sql += "FROM pg_stat_all_tables psat, pg_description pd, pg_attribute pa "
@@ -50,9 +50,8 @@ class Nkdayraces():
         comments = pd.read_sql(sql, con)
         con.close()
 
-        jockeyct = pd.crosstab([racesdf.place, racesdf.jockey], racesdf.placenum, margins=True)
+        jockeyct = pd.crosstab([racesdf.place, racesdf.jockey], racesdf.ranking, margins=True)
         jockeyct.columns = [int(x) if type(x) is float else x for x in jockeyct.columns]
-
         ranges = [list(range(1, x+1)) for x in range(1, 4)]
         jockeyct['単勝率'], jockeyct['連対率'], jockeyct['複勝率'] = [round(100 * jockeyct[range].sum(axis=1) / jockeyct.All, 1) for range in ranges]
 

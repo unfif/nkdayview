@@ -17,6 +17,9 @@ h2, h3{
   margin: 0 8px;
 }
 .contents{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin: 0;
   padding: 4px 10px;
 }
@@ -63,8 +66,8 @@ th, td{
   border-bottom: 3px solid #999;
 }
 div.jockeysrank > table{
-  width: unset;
-  margin: 0 4px 1rem;
+  /* width: unset; */
+  margin: 0 4px 24px;
 }
 table.raceresults tbody tr:not(.場所_{{racesdf.場所.unique()[0]}}){
   display: none;
