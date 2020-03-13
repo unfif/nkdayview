@@ -1,31 +1,39 @@
+h1, h2, h3, h4, h5, h6{
+  margin: 0;
+  padding: 0;
+}
 body{
   padding: 0px;
-  background: #EEE;
+  background: #666;
   font-size: 12px;
 }
 header{
   display: flex;
+  margin: 0;
   padding: 8px;
   background: #343a40;
   color: #fff;
-}
-h1, h2, h3, h4, h5, h6{
-  margin: 0;
-  padding: 0;
 }
 h2, h3{
   margin: 0 8px;
 }
 .contents{
-  display: flex;
+  /* display: flex;
   flex-direction: column;
-  align-items: center;
-  margin: 0;
+  align-items: center; */
+  width: 95%;
+  margin: 0 auto;
   padding: 4px 10px;
+  background: #EEE;
 }
 .flex{
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
+}
+.scrollable{
+  overflow: auto;
+  /* overflow-x: scroll; */
+  white-space: nowrap;
 }
 div.dispplacerace{
   display: flex;
@@ -67,7 +75,7 @@ th, td{
 }
 div.jockeysrank > table{
   /* width: unset; */
-  margin: 0 4px 24px;
+  margin: 4px 4px 24px;
 }
 table.raceresults tbody tr:not(.場所_{{racesdf.場所.unique()[0]}}){
   display: none;
