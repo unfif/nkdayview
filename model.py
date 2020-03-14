@@ -66,7 +66,7 @@ class Nkdayraces():
             lastplace = index[0]
             lastindex = index
 
-        jockeyct = jockeyct.drop(('All', ''))
+        jockeyct = jockeyct.drop([('All', ''), ('', '')])
         jockeyct = jockeyct.rename(columns={1:'1着',2:'2着',3:'3着','All':'騎乗数'})
         jockeysindex = list(jockeyct.columns)
         jockeysindex.remove('騎乗数')

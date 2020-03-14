@@ -79,7 +79,7 @@
     </div>
     <div class="jockeysrank flex scrollable">
       {%- set jockeystr = "activetr" %}
-      {%- for index, row in jockeys.iterrows(): %}
+      {%- for placejocjey, row in jockeys.iterrows(): %}
       {%- if row.dispmode == 'place1st': %}
       <table class="racejockeys table table-sm table-striped table-hover">
         <thead class="thead-dark">
@@ -93,21 +93,21 @@
         </thead>
         <tbody>
       {%- endif %}
-          {%- if row[1] == 0.0 and row[2] == 0.0 and row[3] == 0.0: %}
+          {%- if row[1] == row[2] == row[3] == 0.0: %}
             {%- set jockeystr = "hiddentr" %}
           {%- endif %}
-          <tr class="{{jockeystr}}" data-place="{{index[0]}}">
-            <th>{{index[0]}}</th>
-            <th>{{index[1]}}</th>
-            {%- for col, val in row.items(): %}
+          <tr class="{{jockeystr}}" data-place="{{placejocjey[0]}}">
+            <th>{{placejocjey[0]}}</th>
+            <th>{{placejocjey[1]}}</th>
+            {%- for col, count in row.items(): %}
               {%- if col != 'dispmode': %}
-                {%- if col in ('1着','2着','3着','騎乗数') or (val+1) / (val|int + 1) == 1: %}
-                  {%- set val = val|int %}
+                {%- if col in ('1着','2着','3着','騎乗数') or (count + 1) / (count|int + 1) == 1: %}
+                  {%- set count = count|int %}
                 {%- endif %}
-                {%- if val == 0.0 or val == 0: %}
-                  {%- set val = "..." %}
+                {%- if count|int == 0: %}
+                  {%- set count = "..." %}
                 {%- endif %}
-            <td>{{val}}</td>
+            <td>{{count}}</td>
               {%- endif %}
             {%- endfor %}
           </tr>
