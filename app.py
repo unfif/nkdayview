@@ -12,10 +12,10 @@ args = parser.parse_args()
 app = Flask(__name__)
 app.jinja_env.add_extension('jinja2.ext.do')
 db = init_db(app)
+data = Nkdayraces.getRaces()
 
 @app.route("/")
 def getraces():
-    data = Nkdayraces.getRaces()
     return render_template("index.html", **data)
 
 if __name__ == '__main__':

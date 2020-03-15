@@ -12,7 +12,7 @@ table = meta.tables['nkdayraces']
 cols = table.c
 
 def init_db(app):
-    app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
+    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
 
@@ -31,13 +31,15 @@ class Nkdayraces():
         racesdf.horseweightdiff = racesdf.horseweightdiff.fillna(0).astype(int)
 
         racesdf = racesdf.sort_values(['place', 'racenum', 'ranking']).reset_index(drop=True)
-        racesdf['ranking'] = racesdf[['place', 'racenum', 'ranking']].groupby(['place', 'racenum']).rank(na_option='bottom').astype(int)
+        racesdf.ranking = racesdf[['place', 'racenum', 'ranking']].groupby(['place', 'racenum']).rank(na_option='bottom').astype(int)
 
-        racesdf['nextracerank'] = racesdf.loc[1:, 'ranking'].reset_index(drop=True)
-        racesdf.loc[racesdf['ranking'] < 4, 'rankinfo'] = 'initdisp'
-        racesdf.loc[(racesdf['ranking'] < 4) & (racesdf['nextracerank'] >= 4), 'rankinfo'] = 'initend'
-        racesdf.loc[racesdf['ranking'] >= 4, 'rankinfo'] = 'initnone'
-        racesdf.loc[racesdf['nextracerank'] - racesdf['ranking'] < 0, 'rankinfo'] = 'raceend'
+        racesdf['nextracerank'] = pd.concat([racesdf.ranking[1:], racesdf.ranking[0:1]]).reset_index(drop=True)
+        racesdf['prevracerank'] = pd.concat([racesdf.ranking[-1:], racesdf.ranking[:-1]]).reset_index(drop=True)
+        racesdf.loc[racesdf.ranking < 4, 'rankinfo'] = 'initdisp'
+        racesdf.loc[(racesdf.ranking < 4) & (racesdf.nextracerank >= 4), 'rankinfo'] = 'initend'
+        racesdf.loc[racesdf.ranking >= 4, 'rankinfo'] = 'initnone'
+        racesdf.loc[racesdf.ranking - racesdf.prevracerank < 0, 'rankinfo'] = 'racetop'
+        racesdf.loc[racesdf.nextracerank - racesdf.ranking < 0, 'rankinfo'] = 'raceend'
 
         sql = "SELECT psat.relname as TABLE_NAME, pa.attname as COLUMN_NAME, pd.description as COLUMN_COMMENT "
         sql += "FROM pg_stat_all_tables psat, pg_description pd, pg_attribute pa "

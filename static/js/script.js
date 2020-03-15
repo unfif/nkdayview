@@ -1,5 +1,5 @@
 $(function(){
-  $('.col_レースID, .col_タイトル, .col_天候, .col_日時, .col_日程, .col_グレード, .col_頭数, .col_賞金, .col_raceurl').addClass('hiddentd');
+  $('.col_年, .col_レースID, .col_タイトル, .col_天候, .col_日時, .col_日程, .col_グレード, .col_頭数, .col_賞金, .col_raceurl').addClass('hiddentd');
   $('.raceresults tr').find('td:not(.hiddentd):even').css('background', '#ddd');
 
   $('.raceresults tbody tr').click(function(){
@@ -15,7 +15,7 @@ $(function(){
     if(is_disp_allsameracetr){
       $('tr.rankinfo_initend').css('border-bottom', '3px double #999');
       $tbody.find('tr').hide();
-      $tbody.find('tr.rankinfo_initdisp, tr.rankinfo_initend').show();
+      $tbody.find('tr.rankinfo_racetop, tr.rankinfo_initdisp, tr.rankinfo_initend').show();
     }else{
       $('tr.rankinfo_initend').css('border-bottom', 'none');
       $tbody.find('tr').not(sameracetr).hide();

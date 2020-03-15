@@ -55,7 +55,8 @@ div.dispplacerace > div > h5{
 th, td{
   white-space: nowrap;
 }
-.col_レースID, .col_タイトル, .col_天候, .col_日時, .col_日程, .col_グレード, .col_頭数, .col_賞金, .col_raceurl{
+.col_年, .col_レースID, .col_タイトル, .col_天候, .col_日時, .col_日程, .col_グレード, .col_頭数, .col_賞金, .col_raceurl{
+/* .hiddentd{ */
   display: none;
 }
 .rankinfo_initnone,
@@ -64,6 +65,7 @@ th, td{
 }
 .col_racerank,
 .col_nextracerank,
+.col_prevracerank,
 .col_rankinfo{
   display: none;
 }
@@ -74,8 +76,19 @@ th, td{
   border-bottom: 3px solid #999;
 }
 div.jockeysrank > table{
-  /* width: unset; */
   margin: 4px 4px 24px;
+}
+table.raceresults tbody tr:not(.rankinfo_racetop) .col_場所,
+table.raceresults tbody tr:not(.rankinfo_racetop) .col_R,
+table.raceresults tbody tr:not(.rankinfo_racetop) .col_クラス,
+table.raceresults tbody tr:not(.rankinfo_racetop) .col_形式,
+table.raceresults tbody tr:not(.rankinfo_racetop) .col_距離,
+table.raceresults tbody tr:not(.rankinfo_racetop) .col_情報,
+table.raceresults tbody tr:not(.rankinfo_racetop) .col_状態,
+table.raceresults tbody tr:not(.rankinfo_racetop) .col_時刻{
+  text-indent: 125%;
+	white-space: nowrap;
+	overflow: hidden;
 }
 table.raceresults tbody tr:not(.場所_{{racesdf.場所.unique()[0]}}){
   display: none;
