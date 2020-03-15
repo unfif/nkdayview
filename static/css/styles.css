@@ -37,16 +37,18 @@ h2, h3{
 }
 div.dispplacerace{
   display: flex;
+  flex-wrap: wrap;
   margin-bottom: 4px;
 }
 div.dispplacerace > div{
   display: flex;
+  align-items: center;
   padding: 4px;
 }
 div.dispplacerace > div > h5{
   width: 64px;
   margin: 0 8px;
-  text-align: center;
+  text-align: end;
 }
 .dispplacerace button {
   width: 48px;
