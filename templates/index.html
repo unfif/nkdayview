@@ -53,11 +53,10 @@
       </table>
     </div>
     <div class="placeinfo scrollable">
-      <table class="placeinfo table table-sm table-striped table-hover">
+      <table class="placeinfo sticky table table-sm table-striped table-hover">
         <thead class="thead-dark">
           <tr>
             <th>場所</th>
-            <th>形式</th>
             {%- for column in racesgp2.columns: %}
             <th>{{column}}</th>
             {%- endfor %}
@@ -66,9 +65,11 @@
         <tbody>
           {%- for index, races in racesgp2.iterrows(): %}
           <tr>
-            {%- for th in index: %}
-            <th>{{th}}</th>
-            {%- endfor %}
+            <th class="table-secondary">
+            {%- for th in index: -%}
+              {{- th -}}
+            {%- endfor -%}
+            </th>
             {%- for col, val in races.items() %}
             <td>{{val}}</td>
             {%- endfor %}

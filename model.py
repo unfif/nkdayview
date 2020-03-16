@@ -90,7 +90,6 @@ class Nkdayraces():
         racesgp2 = racesgp2.groupby(['場所','形式']).agg(list).applymap(lambda x: '[' + ', '.join(map(str, x)) + ']')
         racesgp2 = racesgp2.applymap(lambda x: x.strip('['']'))
         racesgp2.R2 = racesgp2.R2.apply(lambda x: x.replace('(', '').replace(')', ''))
-        racesgp2['場所形式'] = racesgp2.index
-        data['racesgp2'] = racesgp2[['R2','枠番','馬番','人気','騎手','場所形式']].rename(columns={'R2':'R'})
+        data['racesgp2'] = racesgp2[['R2','枠番','馬番','人気','騎手']].rename(columns={'R2':'R'})
 
         return data

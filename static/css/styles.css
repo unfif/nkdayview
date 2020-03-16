@@ -28,12 +28,16 @@ h2, h3{
 }
 .flex{
   display: flex;
-  /* justify-content: space-around; */
 }
 .scrollable{
   overflow: auto;
   /* overflow-x: scroll; */
   white-space: nowrap;
+}
+table.sticky thead th:nth-child(1),
+table.sticky tbody th:nth-child(1){
+  position: sticky;
+  left: 0;
 }
 div.dispplacerace{
   display: flex;
