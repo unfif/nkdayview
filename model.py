@@ -5,6 +5,14 @@ from settings import env
 
 db = SQLAlchemy()
 DATABASE_URL = env.get('DATABASE_URL')
+SQLITE_URL = env.get('SQLITE_URL')
+# MONGO_URL = env.get('MONGO_URL')
+if DATABASE_URL is None:
+    if SQLITE_URL is None:
+        DATABASE_URL = "sqlite:///nkdayraces.sqlite3"
+    else:
+        DATABASE_URL = SQLITE_URL
+        
 engine = db.create_engine(DATABASE_URL, {})
 meta = db.MetaData()
 meta.reflect(bind=engine)

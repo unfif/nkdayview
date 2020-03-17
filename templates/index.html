@@ -66,9 +66,9 @@
           {%- for index, races in racesgp2.iterrows(): %}
           <tr>
             <th class="table-secondary">
-            {%- for th in index: -%}
-              {{- th -}}
-            {%- endfor -%}
+              {%- for thtext in index: -%}
+                {{- thtext -}}
+              {%- endfor -%}
             </th>
             {%- for col, val in races.items() %}
             <td>{{val}}</td>
