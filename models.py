@@ -1,34 +1,38 @@
+# %%
 from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
 import copy as cp
 from settings import env
 
+from sqlalchemy import create_engine, MetaData#, Table
+# from sqlalchemy.orm import sessionmaker
+
 db = SQLAlchemy()
 DATABASE_URL = env.get('DATABASE_URL')
-SQLITE_URL = env.get('SQLITE_URL')
+# SQLITE_URL = env.get('SQLITE_URL')
 # MONGO_URL = env.get('MONGO_URL')
-if DATABASE_URL is None:
-    if SQLITE_URL is None:
-        DATABASE_URL = "sqlite:///nkdayraces.sqlite3"
-    else:
-        DATABASE_URL = SQLITE_URL
-        
-engine = db.create_engine(DATABASE_URL, {})
-meta = db.MetaData()
+
+engine = create_engine(DATABASE_URL)
+# Session = sessionmaker(bind=engine)
+meta = MetaData()
 meta.reflect(bind=engine)
-table = meta.tables['nkdayraces']
-cols = table.c
+nkd = meta.tables['nkdayraces']
+jrr = meta.tables['jrarecords']
+# nkd = Table('nkdayraces', meta, autoload=True)
+# jrr = Table('jrarecords', meta, autoload=True)
 
-def init_db(app):
-    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    db.init_app(app)
-
+# sql = nkd.select().order_by(nkd.c.place, nkd.c.racenum, nkd.c.ranking)
+# sql = db.outerjoin(nkd, jrr, db.and_(jrr.c.place == nkd.c.place, jrr.c.distance == nkd.c.distance, jrr.c.courcetype == nkd.c.courcetype, jrr.c.courceinfo1 == nkd.c.courceinfo1, jrr.c.courceinfo2 == nkd.c.courceinfo2)).select().order_by(nkd.c.place, nkd.c.racenum, nkd.c.ranking)
+# con = engine.connect()
+# racesdf = pd.read_sql(sql, con)
+# print(sql, racesdf.columns, '\n', racesdf.time.iloc[:,0], type(racesdf.time.iloc[:,0]))
+# %%
 class Nkdayraces():
     def getRaces():
         data = {}
         con = engine.connect()
-        sql = table.select().order_by(cols.place, cols.racenum, cols.ranking)
+        sql = nkd.select().order_by(nkd.c.place, nkd.c.racenum, nkd.c.ranking)
+        # sql = db.outerjoin(nkd, jrr, db.and_(jrr.c.place == nkd.c.place, jrr.c.distance == nkd.c.distance, jrr.c.courcetype == nkd.c.courcetype, jrr.c.courceinfo1 == nkd.c.courceinfo1, jrr.c.courceinfo2 == nkd.c.courceinfo2)).select().order_by(nkd.c.place, nkd.c.racenum, nkd.c.ranking)
         racesdf = pd.read_sql(sql, con)
 
         racesdf.title = racesdf.title.apply(lambda x: x.rstrip('クラス'))
@@ -91,7 +95,7 @@ class Nkdayraces():
         racesgp = cp.deepcopy(data['racesdf'])
         racesgp['R2'] = racesgp.R
         racesgp[['賞金', '通過']] = racesgp[['賞金', '通過']].applymap(str)
-        racesgp = racesgp.query('順位 < 4').groupby(['場所','R','レースID','クラス','形式','距離','天候','状態','情報','日時','日程','時刻','グレード','頭数','賞金'])
+        racesgp = racesgp.query('順位 < 4').groupby(['場所','R','レースID','クラス','形式','距離','天候','状態','情報1','日時','日程','時刻','グレード','頭数','賞金'])
         racesgp2 = racesgp.agg(list)
         racesgp2.R2 = racesgp2.R2.apply(set)
         racesgp2 = racesgp2.applymap(lambda x: '(' + ', '.join(map(str, x)) + ')')

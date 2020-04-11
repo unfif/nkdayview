@@ -89,7 +89,8 @@ table.raceresults tbody tr:not(.rankinfo_racetop) .col_R,
 table.raceresults tbody tr:not(.rankinfo_racetop) .col_クラス,
 table.raceresults tbody tr:not(.rankinfo_racetop) .col_形式,
 table.raceresults tbody tr:not(.rankinfo_racetop) .col_距離,
-table.raceresults tbody tr:not(.rankinfo_racetop) .col_情報,
+table.raceresults tbody tr:not(.rankinfo_racetop) .col_情報1,
+table.raceresults tbody tr:not(.rankinfo_racetop) .col_情報2,
 table.raceresults tbody tr:not(.rankinfo_racetop) .col_状態,
 table.raceresults tbody tr:not(.rankinfo_racetop) .col_時刻{
   text-indent: 125%;
